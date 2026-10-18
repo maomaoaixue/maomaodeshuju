@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>打卡养宠｜设置页增加添加动物种类按钮</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+        background: #87CEFA;
+        padding: 15px;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* 顶部标签栏 */
+    .tabs {
+        display: flex;
+        background: #409EFF;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 16px;
+    }
+
+    .tab-item {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .tab-item.active {
+        background: #2b7cd3;
+        font-weight: bold;
+    }
+
+    .page {
+        display: none;
+    }
+
+    .page.active {
+        display: block;
+    }
+
+    /* 通用卡片 */
+    .score-card,
+    .task-item,
+    .goods-item,
+    .pet-card,
+    .settings-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .score-card {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .score-title {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .score-num {
+        font-size: 32px;
+        font-weight: bold;
+        color: #409EFF;
+        margin-top: 6px;
+    }
+
+    .block-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 16px 0 10px;
+        color: #222;
+    }
+
+    /* 任务项 */
+    .task-top,
+    .goods-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .task-name,
+    .goods-name {
+        font-size: 19px;
+        font-weight: bold;
+    }
+
+    .task-desc,
+    .goods-desc {
+        font-size: 16px;
+        color: #666;
+        margin: 6px 0;
+    }
+
+    .task-reward,
+    .goods-cost {
+        font-size: 16px;
+        color: #409EFF;
+    }
+
+    .del-btn {
+        border: none;
+        background: #f56c6c;
+        color: #fff;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    /* 按钮 */
+    .task-btn,
+    .goods-btn,
+    .pet-btn,
+    .primary-btn,
+    .add-btn,
+    .reset-btn,
+    .full-reset-btn,
+    .pet-reset-btn,
+    .record-btn,
+    .settings-btn {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #409EFF;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .task-btn:disabled,
+    .goods-btn:disabled {
+        background: #b4d8f8;
+        cursor: not-allowed;
+    }
+
+    .btn-group {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .add-btn {
+        background: #3366cc;
+    }
+
+    .reset-btn {
+        background: #77aadd;
+    }
+
+    .full-reset-btn {
+        background: #c82423;
+    }
+
+    .pet-reset-btn {
+        background: #ff7800;
+    }
+
+    .record-btn {
+        background: #28a745;
+    }
+
+    .add-species-btn {
+        background: #28a745;
+    }
+
+    /* 语音输入按钮样式 */
+    .input-row {
+        display: flex;
+        gap:6px;
+        align-items:center;
+    }
+    .input-row input{
+        flex:1;
+        margin-top:6px;
+    }
+    .voice-btn{
+        border:none;
+        background:#409EFF;
+        color:#fff;
+        border-radius:6px;
+        padding:8px 10px;
+        cursor:pointer;
+        font-size:16px;
+        white-space:nowrap;
+        margin-top:6px;
+    }
+    .voice-btn:disabled{
+        background:#bbbbbb;
+        cursor:not-allowed;
+    }
+
+    /* 宠物页面 */
+    .pet-box {
+        text-align: center;
+    }
+
+    .pet-img {
+        width: 200px;
+        height: 200px;
+        image-rendering: pixelated;
+        border-radius: 12px;
+        background: #f0f7ff;
+        object-fit: contain;
+    }
+
+    .info-line {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .pet-select-wrap{
+        margin-bottom:12px;
+    }
+    .pet-select-wrap select{
+        width:100%;
+        padding:8px;
+        border-radius:8px;
+        border:1px solid #ccc;
+        font-size:16px;
+    }
+
+    /* 商城子分类 */
+    .shop-sub-tab {
+        display: flex;
+        background: #b8d8ff;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    .shop-subtab-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .shop-subtab-item.active {
+        background: #409EFF;
+        color: white;
+    }
+
+    .goods-img {
+        width: 48px;
+        height: 48px;
+        image-rendering: pixelated;
+        float: left;
+        margin-right: 10px;
+        border-radius: 6px;
+        background: #f0f7ff;
+        object-fit: contain;
+    }
+
+    .goods-row {
+        overflow: hidden;
+    }
+
+    /* 设置页 */
+    .settings-item {
+        background: #f7fbff;
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 10px;
+    }
+
+    .settings-item h4 {
+        font-size: 17px;
+        margin-bottom: 6px;
+        color: #222;
+    }
+
+    .settings-item p {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    /* 弹窗 */
+    .modal-mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .modal-box {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        max-width: 420px;
+        width: 90%;
+        max-height: 80vh;
+        overflow: auto;
+    }
+
+    .modal-box h3 {
+        margin-bottom: 10px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .modal-yes,
+    .modal-no {
+        flex: 1;
+        padding: 9px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .modal-yes {
+        background: #409EFF;
+        color: white;
+    }
+
+    .modal-no {
+        background: #aaa;
+        color: white;
+    }
+
+    .rank-tab {
+        display: flex;
+        margin-bottom: 10px;
+        gap: 4px;
+    }
+
+    .rank-tab button {
+        flex: 1;
+        padding: 6px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #ddd;
+    }
+
+    .rank-tab button.active {
+        background: #409EFF;
+        color: white;
+    }
+
+    .rank-item {
+        padding: 6px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .pet-select-option {
+        padding: 8px;
+        margin: 4px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .pet-select-option:hover {
+        background: #e8f4ff;
+    }
+
+    .pet-select-option.selected {
+        background: #409EFF;
+        color: white;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* 升级特效 */
+    .totem-effect {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        background: repeating-linear-gradient(
+            45deg,
+            rgba(255, 0, 0, 0.2),
+            rgba(255, 165, 0, 0.2),
+            rgba(255, 255, 0, 0.2),
+            rgba(0, 255, 0, 0.2),
+            rgba(0, 0, 255, 0.2),
+            rgba(128, 0, 255, 0.2),
+            rgba(255, 0, 0, 0.2)
+        );
+        animation: totemAnim 0.8s ease-out forwards;
+    }
+
+    @keyframes totemAnim {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 顶部标签 -->
+    <div class="tabs">
+        <div class="tab-item active" data-page="task">📋 打卡任务</div>
+        <div class="tab-item" data-page="shop">🛒 积分商城</div>
+        <div class="tab-item" data-page="pet">🐾 宠物</div>
+        <div class="tab-item" data-page="settings">⚙️ 设置</div>
+    </div>
+
+    <!-- 打卡任务页【简化！不再展示任务列表】 -->
+    <div id="page-task" class="page active">
+        <div class="score-card">
+            <div class="score-title">💰 我的积分</div>
+            <div class="score-num" id="scoreText">0</div>
+        </div>
+
+        <div class="block-title">📋 打卡中心</div>
+        <p style="padding:8px;">打卡任务管理、新增任务请到【设置】页面操作</p>
+
+        <div class="btn-group">
+            <button class="reset-btn" onclick="resetAllTaskState()">🔄 重置打卡任务状态</button>
+            <button class="record-btn" onclick="openRecordModal()">📊 查看打卡记录榜单</button>
+        </div>
+    </div>
+
+    <!-- 商城页 -->
+    <div id="page-shop" class="page">
+        <div class="score-card">
+            <div class="score-title">🛒 积分商城</div>
+            <div class="score-num">当前积分：<span id="shopScore">0</span></div>
+        </div>
+
+        <div class="shop-sub-tab">
+            <div class="shop-subtab-item active" data-shop="props">普通道具</div>
+            <div class="shop-subtab-item" data-shop="food">宠物食物</div>
+        </div>
+
+        <div id="goodsListWrap"></div>
+
+        <div class="btn-group">
+            <button class="add-btn" onclick="openAddGoodsModal()">➕ 添加新商品</button>
+        </div>
+    </div>
+
+    <!-- 宠物页【多物种+自定义动物】 -->
+    <div id="page-pet" class="page">
+        <div class="pet-card">
+            <div class="block-title">🐾 我的宠物们</div>
+            <div id="petWrap"></div>
+        </div>
+    </div>
+
+    <!-- 设置页【新增：添加新动物种类按钮】 -->
+    <div id="page-settings" class="page">
+        <div class="settings-card">
+            <div class="block-title">⚙️ 设置</div>
+
+            <div class="settings-item">
+                <h4>📋 打卡任务管理</h4>
+                <p>在这里新增、删除、完成打卡任务。</p>
+                <div id="taskListWrap"></div>
+                <button class="add-btn" onclick="openAddTaskModal()">➕ 新增自定义任务</button>
+            </div>
+
+            <!-- ✅ 新增动物种类区域 -->
+            <div class="settings-item">
+                <h4>🐾 动物种类管理</h4>
+                <p>在这里添加新的动物物种，领养宠物时可以直接选用。</p>
+                <button class="settings-btn add-species-btn" onclick="openAddNewSpeciesModal()">➕ 添加新动物种类</button>
+            </div>
+
+            <div class="settings-item">
+                <h4>📁 数据管理</h4>
+                <p>在这里可以重置全部宠物，或清空全部数据重新开始。</p>
+                <button class="pet-reset-btn" onclick="resetPetOnly()">🐾 重置全部宠物</button>
+                <button class="full-reset-btn" onclick="fullResetAllData()">🗑️ 全部重置</button>
+            </div>
+
+            <div class="settings-item">
+                <h4>🔔 音效设置</h4>
+                <p>打卡、兑换、升级时会播放提示音。首次点击页面后音效才会生效。</p>
+            </div>
+
+            <div class="settings-item">
+                <h4>📅 日期设置</h4>
+                <p>打卡时可手动选择日期，格式为 YYYY-MM-DD。</p>
+            </div>
+
+            <div class="settings-item">
+                <h4>💾 本地保存</h4>
+                <p>数据会自动保存在当前浏览器中，清理浏览器缓存后可能会丢失。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== 语音识别通用函数 ==========
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const supportVoice = !!SpeechRecognition;
+
+    function startVoiceRecognition(inputElement) {
+        if(!supportVoice) {
+            alert("你的浏览器不支持语音输入，请使用Chrome或Edge浏览器");
+            return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'zh-CN';
+        recognition.start();
+        recognition.onresult = function(e) {
+            const text = e.results[0][0].transcript;
+            inputElement.value = text;
+        }
+        recognition.onerror = function(err) {
+            alert("语音识别失败："+err.error);
+        }
+    }
+
+    // 音效
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playDing() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+    }
+
+    function playUpgradeSound() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 1200;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+    }
+
+    // 默认数据：petTypes 存放【所有动物种类，支持自定义新增】
+    const defaultData = {
+        score: 0,
+        taskList: [],
+        goodsList: [],
+        recordList: [],
+        petList: [], // 已经领养的宠物（多只，不同物种）
+        activePetId: null,
+        fragment: 0,
+        badgeNum: 0,
+        // 预设动物种类，用户可以自己新增
+        petTypes: [
+            {name:"小猫咪", img:"https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/23001008393e40489120071d004d3111~tplv-a9rns2rl98-image.image"},
+            {name:"小狗", img:"https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/841200132c3440388142413012400301~tplv-a9rns2rl98-image.image"},
+            {name:"小兔子", img:"https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/12001032144440389240200230410203~tplv-a9rns2rl98-image.image"},
+            {name:"水豚", img:"https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/01001204312440488014121120104011~tplv-a9rns2rl98-image.image"},
+            {name:"小鸟", img:"https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/40120013142440398120121012314411~tplv-a9rns2rl98-image.image"}
+        ],
+        shopSubActive: "props"
+    };
+
+    let pageData;
+    let savedRaw = localStorage.getItem('petDemoData');
+
+    if (!savedRaw) {
+        pageData = JSON.parse(JSON.stringify(defaultData));
+    } else {
+        pageData = JSON.parse(savedRaw);
+        // 兼容旧版本，旧数据升级
+        if(!pageData.petTypes){
+            pageData.petTypes = JSON.parse(JSON.stringify(defaultData.petTypes));
+        }
+        if(pageData.pet && !pageData.petList){
+            if(pageData.pet.hasPet){
+                pageData.petList = [{
+                    id: Date.now(),
+                    species: "小猫咪",
+                    petName: pageData.pet.petName,
+                    petImg: pageData.pet.petImg,
+                    level: pageData.pet.level,
+                    exp: pageData.pet.exp,
+                    needExp: pageData.pet.needExp
+                }];
+                pageData.activePetId = pageData.petList[0].id;
+            }else{
+                pageData.petList = [];
+            }
+            delete pageData.pet;
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem('petDemoData', JSON.stringify(pageData));
+    }
+
+    // 标签切换
+    document.querySelectorAll('.tab-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            item.classList.add('active');
+            document.getElementById('page-' + item.dataset.page).classList.add('active');
+            renderAll();
+        });
+    });
+
+    // 商城子分类切换
+    document.querySelectorAll('.shop-subtab-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.shop-subtab-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            pageData.shopSubActive = item.dataset.shop;
+            saveData();
+            renderShop();
+        });
+    });
+
+    function renderAll() {
+        renderTask();
+        renderShop();
+        renderPet();
+    }
+
+    // 打卡任务【现在渲染到设置页面】
+    function renderTask() {
+        document.getElementById('scoreText').innerText = pageData.score;
+        const wrap = document.getElementById('taskListWrap');
+        let html = '';
+
+        pageData.taskList.forEach(item => {
+            html += `
+                <div class="task-item">
+                    <div class="task-top">
+                        <div class="task-name">${item.name}</div>
+                        <button class="del-btn" onclick="deleteTaskConfirm(${item.id})">删除</button>
+                    </div>
+                    <div class="task-desc">📝 ${item.desc}</div>
+                    <div class="task-reward">奖励积分：+${item.score}</div>
+                    <button class="task-btn" onclick="checkIn(${item.id})" ${item.done ? 'disabled' : ''}>
+                        ${item.done ? '✅ 已打卡' : '立即打卡'}
+                    </button>
+                </div>
+            `;
+        });
+
+        wrap.innerHTML = html;
+    }
+
+    function openAddTaskModal() {
+        closeModal();
+
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+        mask.innerHTML = `
+            <div class="modal-box">
+                <h3>新增打卡任务</h3>
+                <label>任务名称</label>
+                <div class="input-row">
+                    <input id="taskName" placeholder="例如：早起读书" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('taskName'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <label>任务描述</label>
+                <div class="input-row">
+                    <input id="taskDesc" placeholder="简单写一下任务要求" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('taskDesc'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <label>完成后获得积分</label>
+                <input id="taskScore" type="number" value="10" />
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认添加</button>
+                    <button class="modal-no">取消</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(mask);
+
+        mask.querySelector('.modal-yes').onclick = () => {
+            const name = document.getElementById('taskName').value.trim();
+            const desc = document.getElementById('taskDesc').value.trim();
+            const score = Number(document.getElementById('taskScore').value) || 10;
+
+            if (!name) {
+                alert('任务名称不能为空');
+                return;
+            }
+
+            pageData.taskList.push({
+                id: Date.now(),
+                name,
+                desc,
+                score,
+                done: false
+            });
+
+            saveData();
+            renderAll();
+            playDing();
+            mask.remove();
+            alert('任务添加成功！');
+        };
+
+        mask.querySelector('.modal-no').onclick = () => mask.remove();
+    }
+
+    function checkIn(id) {
+        const task = pageData.taskList.find(t => t.id === id);
+        if (!task || task.done) return;
+
+        const dateStr = prompt('设置本次打卡日期，格式：YYYY-MM-DD', '2026-10-17');
+        if (!dateStr) return;
+
+        const customDate = new Date(dateStr);
+        if (isNaN(customDate.getTime())) {
+            alert('日期格式错误！');
+            return;
+        }
+
+        task.done = true;
+        pageData.score += task.score;
+        pageData.recordList.push({
+            time: customDate.toISOString(),
+            day: customDate.getDate(),
+            month: customDate.getMonth() + 1,
+            year: customDate.getFullYear(),
+            week: Math.ceil((customDate.getDate() + new Date(customDate.getFullYear(), customDate.getMonth(), 1).getDay()) / 7),
+            gain: task.score
+        });
+
+        saveData();
+        renderAll();
+        playDing();
+        alert('打卡成功！');
+    }
+
+    function deleteTaskConfirm(id) {
+        showModal('确定删除这条打卡任务吗？删除后无法恢复。', () => {
+            pageData.taskList = pageData.taskList.filter(t => t.id !== id);
+            saveData();
+            renderAll();
+        });
+    }
+
+    function resetAllTaskState() {
+        showModal('确定重置所有打卡任务状态吗？不会清空历史打卡记录。', () => {
+            pageData.taskList = pageData.taskList.map(item => ({ ...item, done: false }));
+            saveData();
+            renderAll();
+            alert('打卡状态已重置！');
+        });
+    }
+
+    // 榜单
+    function openRecordModal() {
+        let activeRank = 'week';
+
+        function renderRank() {
+            let html = `
+                <div class="rank-tab">
+                    <button class="${activeRank === 'week' ? 'active' : ''}" onclick="changeRank('week')">周榜</button>
+                    <button class="${activeRank === 'month' ? 'active' : ''}" onclick="changeRank('month')">月榜</button>
+                    <button class="${activeRank === 'year' ? 'active' : ''}" onclick="changeRank('year')">年榜</button>
+                </div>
+            `;
+
+            if (activeRank === 'week') {
+                const dayMap = {};
+                pageData.recordList.forEach(r => {
+                    const k = `${r.year}-${r.month}-${r.day}`;
+                    if (!dayMap[k]) dayMap[k] = 0;
+                    dayMap[k] += r.gain;
+                });
+                const arr = Object.entries(dayMap).sort((a, b) => b[1] - a[1]);
+                html += '<b>周榜：每日获得积分排名</b><br>';
+                if (arr.length === 0) html += '<p>暂无打卡记录</p>';
+                arr.forEach(([date, score]) => {
+                    html += `<div class="rank-item">${date}：${score}积分</div>`;
+                });
+            } else if (activeRank === 'month') {
+                const dayMap = {};
+                pageData.recordList.forEach(r => {
+                    const k = `${r.year}-${r.month}-${r.day}`;
+                    if (!dayMap[k]) dayMap[k] = 0;
+                    dayMap[k] += r.gain;
+                });
+                const arr = Object.entries(dayMap).sort((a, b) => b[1] - a[1]);
+                html += '<b>月榜：每日获得积分排名</b><br>';
+                if (arr.length === 0) html += '<p>暂无打卡记录</p>';
+                arr.forEach(([date, score]) => {
+                    html += `<div class="rank-item">${date}：${score}积分</div>`;
+                });
+            } else {
+                const monthMap = {};
+                pageData.recordList.forEach(r => {
+                    const k = `${r.year}-${r.month}`;
+                    if (!monthMap[k]) monthMap[k] = 0;
+                    monthMap[k] += r.gain;
+                });
+                const arr = Object.entries(monthMap).sort((a, b) => b[1] - a[1]);
+                html += '<b>年榜：每月总积分排名</b><br>';
+                if (arr.length === 0) html += '<p>暂无打卡记录</p>';
+                arr.forEach(([ym, score]) => {
+                    html += `<div class="rank-item">${ym}：${score}积分</div>`;
+                });
+            }
+
+            return html;
+        }
+
+        window.changeRank = function (type) {
+            activeRank = type;
+            const box = document.querySelector('.modal-box');
+            box.innerHTML = renderRank() + `<div class="modal-buttons"><button class="modal-no" onclick="closeModal()">关闭</button></div>`;
+        };
+
+        showCustomModal(renderRank(), () => { }, () => { });
+    }
+
+    // 商城
+    function renderShop() {
+        document.getElementById('shopScore').innerText = pageData.score;
+        const wrap = document.getElementById('goodsListWrap');
+        let html = '';
+
+        const filterGoods = pageData.goodsList.filter(g => g.type === pageData.shopSubActive);
+
+        filterGoods.forEach(item => {
+            html += `
+                <div class="goods-item">
+                    <div class="goods-top">
+                        <div class="goods-row">
+                            <img class="goods-img" src="${item.img}" alt="" />
+                            <div class="goods-name">${item.name}</div>
+                        </div>
+                        <button class="del-btn" onclick="deleteGoodsConfirm(${item.id})">删除</button>
+                    </div>
+                    <div class="goods-desc">📖 ${item.desc}</div>
+                    <div class="goods-cost">所需积分：${item.cost} ${item.exp ? '｜使用+' + item.exp + '经验' : ''}</div>
+                    <button class="goods-btn" onclick="buyConfirm(${item.id})" ${pageData.score < item.cost ? 'disabled' : ''}>
+                        ${pageData.score >= item.cost ? '立即兑换' : '积分不足'}
+                    </button>
+                </div>
+            `;
+        });
+
+        wrap.innerHTML = html;
+    }
+
+    function openAddGoodsModal() {
+        closeModal();
+
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+        mask.innerHTML = `
+            <div class="modal-box">
+                <h3>添加新商品</h3>
+                <label>商品名称</label>
+                <div class="input-row">
+                    <input id="goodsName" placeholder="例如：宠物小蛋糕" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('goodsName'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <label>商品描述</label>
+                <div class="input-row">
+                    <input id="goodsDesc" placeholder="写一下商品作用" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('goodsDesc'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <label>兑换消耗积分</label>
+                <input id="goodsCost" type="number" value="50" />
+                <label>商品类型</label>
+                <select id="goodsType">
+                    <option value="props">普通道具</option>
+                    <option value="food">宠物食物</option>
+                </select>
+                <div id="expWrap" class="hidden">
+                    <label>喂食增加经验值</label>
+                    <input id="goodsExp" type="number" value="30" />
+                </div>
+                <label>图片链接（可选）</label>
+                <div class="input-row">
+                    <input id="goodsImg" placeholder="留空使用默认图片" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('goodsImg'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认添加</button>
+                    <button class="modal-no">取消</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(mask);
+
+        const typeSelect = mask.querySelector('#goodsType');
+        const expWrap = mask.querySelector('#expWrap');
+
+        typeSelect.onchange = function () {
+            expWrap.classList.toggle('hidden', this.value !== 'food');
+        };
+
+        mask.querySelector('.modal-yes').onclick = () => {
+            const name = document.getElementById('goodsName').value.trim();
+            const desc = document.getElementById('goodsDesc').value.trim();
+            const cost = Number(document.getElementById('goodsCost').value) || 50;
+            const type = document.getElementById('goodsType').value;
+            let exp = null;
+
+            if (type === 'food') {
+                exp = Number(document.getElementById('goodsExp').value) || 0;
+            }
+
+            let img = document.getElementById('goodsImg').value.trim();
+            if (!img) img = 'https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/31201004487440389411121d01243301~tplv-a9rns2rl98-image.image';
+
+            if (!name) {
+                alert('商品名称不能为空');
+                return;
+            }
+
+            pageData.goodsList.push({
+                id: Date.now(),
+                name,
+                desc,
+                cost,
+                type,
+                exp,
+                img
+            });
+
+            saveData();
+            renderAll();
+            playDing();
+            mask.remove();
+            alert('商品添加成功！');
+        };
+
+        mask.querySelector('.modal-no').onclick = () => mask.remove();
+    }
+
+    function buyConfirm(id) {
+        const goods = pageData.goodsList.find(g => g.id === id);
+        if (pageData.score < goods.cost) return;
+        if(goods.exp && !pageData.activePetId){
+            alert('请先选择一只宠物！');
+            return;
+        }
+
+        showModal(`是否确认兑换【${goods.name}】？扣除${goods.cost}积分。`, () => {
+            pageData.score -= goods.cost;
+
+            if (goods.exp) {
+                const pet = pageData.petList.find(p=>p.id === pageData.activePetId);
+                let upgrade = false;
+                pet.exp += goods.exp;
+
+                while (pet.exp >= pet.needExp && pet.level < 10) {
+                    pet.exp -= pet.needExp;
+                    pet.level++;
+                    pet.needExp = pet.level * 100;
+                    pageData.fragment += 1;
+                    upgrade = true;
+                }
+
+                if (upgrade) {
+                    const effectDiv = document.createElement('div');
+                    effectDiv.className = 'totem-effect';
+                    document.body.appendChild(effectDiv);
+                    setTimeout(() => effectDiv.remove(), 800);
+                    playUpgradeSound();
+                }
+            }
+
+            saveData();
+            renderAll();
+            playDing();
+            alert(`兑换成功！${goods.name}`);
+        });
+    }
+
+    function deleteGoodsConfirm(id) {
+        showModal('确定删除这个商城商品吗？删除后无法恢复。', () => {
+            pageData.goodsList = pageData.goodsList.filter(g => g.id !== id);
+            saveData();
+            renderAll();
+        });
+    }
+
+    // ========== 宠物渲染【多物种、自定义动物】 ==========
+    function renderPet() {
+        const wrap = document.getElementById('petWrap');
+        let html = '';
+        const pets = pageData.petList;
+        const activePet = pets.find(p=>p.id === pageData.activePetId);
+
+        if (pets.length === 0) {
+            html += `
+                <p class="info-line">还没有宠物，可以领养不同种类小动物！<br>领养免费，不需要积分</p>
+                <button class="pet-btn" onclick="openPetSelectModal()">领养新宠物</button>
+                <button class="pet-btn" onclick="openAddNewSpeciesModal()" style="background:#28a745">➕ 添加新动物种类</button>
+            `;
+        } else {
+            // 宠物下拉选择框
+            html += `<div class="pet-select-wrap">
+                <select onchange="switchPet(this.value)">`;
+            pets.forEach(p=>{
+                html += `<option value="${p.id}" ${p.id === pageData.activePetId ? 'selected':''}>【${p.species}】${p.petName}</option>`;
+            })
+            html += `</select></div>`;
+
+            html += `
+                <div class="pet-box">
+                    <img class="pet-img" src="${activePet.petImg}" alt="${activePet.petName}" />
+                    <p class="info-line" style="font-size:17px;color:#666;">物种：${activePet.species}</p>
+                    <p class="info-line" style="font-weight:bold;font-size:20px;">昵称：${activePet.petName}</p>
+                </div>
+                <p class="info-line">等级：${activePet.level} / 10</p>
+                <p class="info-line">经验：${activePet.exp} / ${activePet.needExp}</p>
+                <p class="info-line">🧩 徽章碎片：${pageData.fragment}个</p>
+                <p class="info-line">🏅 徽章数量：${pageData.badgeNum}个</p>
+                <div class="btn-group">
+                    <button class="pet-btn" onclick="renamePet()">✏️ 修改宠物昵称</button>
+                    <button class="pet-btn" onclick="combineBadge()" ${pageData.fragment < 20 ? 'disabled' : ''}>合成徽章（消耗20碎片）</button>
+                    <button class="pet-btn" onclick="exchangeBadge()" ${pageData.badgeNum <= 0 ? 'disabled' : ''}>徽章兑换奖励</button>
+                    <button class="pet-btn" onclick="openPetSelectModal()">➕ 领养新宠物</button>
+                    <button class="pet-btn" onclick="openAddNewSpeciesModal()" style="background:#28a745">➕ 添加新动物种类</button>
+                    <button class="pet-btn" style="background:#f56c6c" onclick="deleteCurrentPet()">🗑️ 删除当前宠物</button>
+                </div>
+            `;
+        }
+
+        wrap.innerHTML = html;
+    }
+
+    // 切换选中宠物
+    function switchPet(petId){
+        pageData.activePetId = Number(petId);
+        saveData();
+        renderPet();
+    }
+
+    // 修改昵称
+    function renamePet(){
+        const pet = pageData.petList.find(p=>p.id === pageData.activePetId);
+        const newName = prompt("输入新的宠物昵称：", pet.petName);
+        if(newName && newName.trim()){
+            pet.petName = newName.trim();
+            saveData();
+            renderPet();
+            playDing();
+        }
+    }
+
+    // 删除当前选中宠物
+    function deleteCurrentPet(){
+        const pet = pageData.petList.find(p=>p.id === pageData.activePetId);
+        showModal(`确定删除【${pet.species}：${pet.petName}】吗？等级经验全部清空，无法恢复`,()=>{
+            pageData.petList = pageData.petList.filter(p=>p.id !== pageData.activePetId);
+            if(pageData.petList.length>0){
+                pageData.activePetId = pageData.petList[0].id;
+            }else{
+                pageData.activePetId = null;
+            }
+            saveData();
+            renderAll();
+        })
+    }
+
+    // 弹窗：【新增动物物种】自己添加动物
+    function openAddNewSpeciesModal(){
+        closeModal();
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+        mask.innerHTML = `
+            <div class="modal-box">
+                <h3>添加新动物种类</h3>
+                <label>动物名称（例如：仓鼠、羊驼）</label>
+                <div class="input-row">
+                    <input id="newSpeciesName" placeholder="输入动物名字">
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('newSpeciesName'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <label>动物图片链接</label>
+                <div class="input-row">
+                    <input id="newSpeciesImg" placeholder="粘贴图片网址">
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('newSpeciesImg'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认添加</button>
+                    <button class="modal-no">取消</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(mask);
+        mask.querySelector('.modal-yes').onclick = ()=>{
+            const sName = document.getElementById('newSpeciesName').value.trim();
+            const sImg = document.getElementById('newSpeciesImg').value.trim();
+            if(!sName){
+                alert("动物名称不能为空！");
+                return;
+            }
+            // 检查是否已经存在同名物种
+            const exists = pageData.petTypes.find(t=>t.name === sName);
+            if(exists){
+                alert("这个动物种类已经存在啦！");
+                mask.remove();
+                return;
+            }
+            pageData.petTypes.push({name:sName, img:sImg});
+            saveData();
+            renderAll();
+            playDing();
+            mask.remove();
+            alert(`【${sName}】添加成功！领养的时候就可以选这个动物了`);
+        }
+        mask.querySelector('.modal-no').onclick = ()=>mask.remove();
+    }
+
+    // 领养新宠物弹窗（选择物种）
+    function openPetSelectModal() {
+        closeModal();
+
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+
+        let optionsHtml = '';
+        pageData.petTypes.forEach((animal, idx) => {
+            optionsHtml += `<div class="pet-select-option" onclick="selectPetIndex(${idx}, this)">${animal.name}</div>`;
+        });
+
+        mask.innerHTML = `
+            <div class="modal-box">
+                <h3>领养新宠物</h3>
+                <p>选择动物种类，起一个昵称。</p>
+                <label>宠物昵称</label>
+                <div class="input-row">
+                    <input id="petNameInput" placeholder="给小动物起个昵称" />
+                    <button class="voice-btn" onclick="startVoiceRecognition(document.getElementById('petNameInput'))" ${!supportVoice?'disabled':''}>🎤语音</button>
+                </div>
+                <p>选择动物种类：</p>
+                <div id="petOptions">${optionsHtml}</div>
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认领养</button>
+                    <button class="modal-no">取消</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(mask);
+
+        let selectedIdx = 0;
+        const firstOption = mask.querySelector('.pet-select-option');
+        if (firstOption) firstOption.classList.add('selected');
+
+        window.selectPetIndex = function (idx, dom) {
+            selectedIdx = idx;
+            mask.querySelectorAll('.pet-select-option').forEach(d => d.classList.remove('selected'));
+            dom.classList.add('selected');
+        };
+
+        mask.querySelector('.modal-yes').onclick = () => {
+            const nameInput = document.getElementById('petNameInput').value.trim();
+            const animalType = pageData.petTypes[selectedIdx];
+            const petNick = nameInput || animalType.name;
+
+            const newPet = {
+                id: Date.now(),
+                species: animalType.name,
+                petName: petNick,
+                petImg: animalType.img,
+                level: 0,
+                exp: 0,
+                needExp: 100
+            };
+            pageData.petList.push(newPet);
+            pageData.activePetId = newPet.id;
+
+            saveData();
+            renderAll();
+            playDing();
+            mask.remove();
+            alert(`领养成功！一只【${animalType.name}】，昵称：${petNick}`);
+        };
+
+        mask.querySelector('.modal-no').onclick = () => mask.remove();
+    }
+
+    function combineBadge() {
+        if (pageData.fragment >= 20) {
+            showModal('消耗20个碎片合成1枚徽章？', () => {
+                pageData.fragment -= 20;
+                pageData.badgeNum += 1;
+                saveData();
+                renderAll();
+                playDing();
+                alert('徽章合成成功！');
+            });
+        }
+    }
+
+    function exchangeBadge() {
+        if (pageData.badgeNum > 0) {
+            showModal('消耗1枚徽章兑换奖励？', () => {
+                pageData.badgeNum -= 1;
+                saveData();
+                renderAll();
+                playDing();
+                alert('徽章兑换成功！');
+            });
+        }
+    }
+
+    // 重置全部宠物
+    function resetPetOnly() {
+        showModal('⚠️ 准备重置【全部宠物】。所有宠物等级、经验、碎片和徽章清空，积分任务商城打卡记录保留。自定义动物种类不会删除！', () => {
+            showModal('❗ 再次确认，确定重置所有宠物？', () => {
+                pageData.petList = [];
+                pageData.activePetId = null;
+                pageData.fragment = 0;
+                pageData.badgeNum = 0;
+                saveData();
+                renderAll();
+                alert('所有宠物已清空！你添加的动物种类还保留着。');
+            });
+        });
+    }
+
+    function fullResetAllData() {
+        showModal('⚠️ 确定全部清空所有数据吗？任务、商城、积分、宠物、打卡记录，包括你自定义添加的动物种类都会删除。', () => {
+            localStorage.removeItem('petDemoData');
+            pageData = JSON.parse(JSON.stringify(defaultData));
+            saveData();
+            renderAll();
+            alert('已全部重置！恢复初始预设动物。');
+        });
+    }
+
+    // 通用弹窗
+    function showModal(text, onYes) {
+        closeModal();
+
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+        mask.innerHTML = `
+            <div class="modal-box">
+                <div style="white-space:pre-line;">${text}</div>
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认</button>
+                    <button class="modal-no">取消</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(mask);
+
+        mask.querySelector('.modal-yes').onclick = () => {
+            onYes();
+            mask.remove();
+        };
+
+        mask.querySelector('.modal-no').onclick = () => mask.remove();
+    }
+
+    function showCustomModal(html, onYes, onNo) {
+        closeModal();
+
+        const mask = document.createElement('div');
+        mask.className = 'modal-mask';
+        mask.innerHTML = `
+            <div class="modal-box">
+                ${html}
+                <div class="modal-buttons">
+                    <button class="modal-yes">确认</button>
+                    <button class="modal-no">关闭</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(mask);
+
+        mask.querySelector('.modal-yes').onclick = () => {
+            onYes();
+            mask.remove();
+        };
+
+        mask.querySelector('.modal-no').onclick = () => mask.remove();
+    }
+
+    function closeModal() {
+        document.querySelectorAll('.modal-mask').forEach(el => el.remove());
+    }
+
+    // 初始化
+    renderAll();
+</script>
+
+</body>
+</html>
